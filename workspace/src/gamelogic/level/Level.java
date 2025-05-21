@@ -212,7 +212,7 @@ public class Level {
 		map.addTile(col, row, w);
 
         //check if we can go dow
-		if(row+2 < map.getTiles()[0].length && (map.getTiles()[col][row+2].isSolid())){
+		if(row+2 < map.getTiles()[0].length && !(map.getTiles()[col][row+2].isSolid())){
 			water(col, row+1, map, 3);
 		}else if (row+1<map.getTiles()[0].length && !(map.getTiles()[col][row+1].isSolid())){
 			water(col, row+1, map, 0);
