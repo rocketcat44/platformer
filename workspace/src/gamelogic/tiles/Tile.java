@@ -2,6 +2,7 @@ package gamelogic.tiles;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 
 import gameengine.GameObject;
 import gameengine.hitbox.RectHitbox;
@@ -17,6 +18,12 @@ public class Tile{
 	protected boolean solid;
 	protected Level level;
 	
+	public void setImage(BufferedImage img){
+		image = img;
+	}
+
+
+
 	public Tile(float x, float y, int size, BufferedImage image, boolean solid, Level level) {
 		this.position = new Vector2D(x*size, y*size);
 		this.size = size;
