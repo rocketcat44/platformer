@@ -35,6 +35,8 @@ public class Level {
 
 	private ArrayList<Enemy> enemiesList = new ArrayList<>();
 	private ArrayList<Flower> flowers = new ArrayList<>();
+	private ArrayList<Water> waters = new ArrayList<>();
+	private ArrayList<Gas> gasses = new ArrayList<>();
 
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
@@ -183,6 +185,27 @@ public class Level {
 					onPlayerDeath();
 				}
 			}
+			player.jumpPower = 1450;
+			player.walkSpeed = 400;;
+
+			//pre condition: waters array is not empty
+			//post condition: players jumppower is less
+			// Update the waters
+			for (Water w: waters){
+				if(w.getHitbox().isIntersecting(player.getHitbox())){
+					player.jumpPower = 1050;
+				}
+			}
+			
+			//pre condition: gasses array is not empty
+			//post condition: players walkspeed is less
+			// Update the waters
+			for (Gas w: gasses){
+				if(w.getHitbox().isIntersecting(player.getHitbox())){
+					player.walkSpeed = 150;
+				}
+			}
+
 
 			// Update the map
 			map.update(tslf);
@@ -208,6 +231,8 @@ public class Level {
 		}else{
 			w = new Water (col,row, tileSize, tileset.getImage("Falling_water"), this, 0);
 		}
+
+		waters.add(w);
 		
 		map.addTile(col, row, w);
 
@@ -242,22 +267,23 @@ public class Level {
 		Gas g = new Gas (col, row, tileSize, tileset.getImage("GasOne"),this, 0);
 		map.addTile(col, row, g);
 		placedThisRound.add(g);
-		int[][] rowsies = {{3,5,8},{1,-1,6},{2,4,7}};
-			int r = 1;
-			int c = 1;
+		numSquaresToFill--;
+
 		//placedThisRound.add(g);
 		while (placedThisRound.size()>0 && numSquaresToFill >= 0){
 			//draw designed pattern starting at the location of the tile in placedThisRound.get(0) 
 			//be sure to add each tile you draw to placedThisRound
-
+			int r = placedThisRound.get(0).getRow();
+			int c = placedThisRound.get(0).getCol();
+			placedThisRound.remove(0);
 			for(int rowIndex = r-1;rowIndex<r+2;rowIndex++){
 				for(int colIndex = c; colIndex>c-2;colIndex-=2){
-					g = new Gas (col+colIndex, row+rowsies[colIndex][rowIndex], tileSize, tileset.getImage("GasOne"),this, 0);
-					if (g.getRow()-1>0 && !(map.getTiles()[g.getCol()][g.getRow()] instanceof Gas) && !(map.getTiles()[g.getCol()][g.getRow()].isSolid())){
+					g = new Gas (colIndex,rowIndex, tileSize, tileset.getImage("GasOne"),this, 0);
+					if (g.getRow()-1>0 && g.getRow()+1>0 && g.getCol()+1>0 && g.getCol()-1>0 &&  !(map.getTiles()[g.getCol()][g.getRow()] instanceof Gas) && !(map.getTiles()[g.getCol()][g.getRow()].isSolid())){
 
 						map.addTile(g.getCol(),g.getRow(), g);
 						placedThisRound.add(g);
-						
+						numSquaresToFill--;
 					}
 
 					if (colIndex==c){
