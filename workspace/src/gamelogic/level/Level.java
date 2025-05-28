@@ -212,10 +212,12 @@ public class Level {
 		map.addTile(col, row, w);
 
         //check if we can go dow
-		if(row+2 < map.getTiles()[0].length && (map.getTiles()[col][row+2].isSolid())){
-			water(col, row+1, map, 3);
-		}else if (row+1<map.getTiles()[0].length && !(map.getTiles()[col][row+1].isSolid())){
-			water(col, row+1, map, 0);
+		if (row+1<map.getTiles()[0].length && !(map.getTiles()[col][row+1].isSolid())){
+			if(row+2 < map.getTiles()[0].length && (map.getTiles()[col][row+2].isSolid())){
+				water(col, row+1, map, 3);
+			}else{
+				water(col, row+1, map, 0);
+			}
 		}else if (row+1 < map.getTiles()[0].length){
 
 			//if we can’t go down go left and right.
@@ -239,11 +241,32 @@ public class Level {
 	private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
 		Gas g = new Gas (col, row, tileSize, tileset.getImage("GasOne"),this, 0);
 		map.addTile(col, row, g);
-
 		placedThisRound.add(g);
+		int[][] rowsies = {{3,5,8},{1,-1,6},{2,4,7}};
+			int r = 1;
+			int c = 1;
+		//placedThisRound.add(g);
 		while (placedThisRound.size()>0 && numSquaresToFill >= 0){
 			//draw designed pattern starting at the location of the tile in placedThisRound.get(0) 
 			//be sure to add each tile you draw to placedThisRound
+
+			for(int rowIndex = r-1;rowIndex<r+2;rowIndex++){
+				for(int colIndex = c; colIndex>c-2;colIndex-=2){
+					g = new Gas (col+colIndex, row+rowsies[colIndex][rowIndex], tileSize, tileset.getImage("GasOne"),this, 0);
+					if (g.getRow()-1>0 && !(map.getTiles()[g.getCol()][g.getRow()] instanceof Gas) && !(map.getTiles()[g.getCol()][g.getRow()].isSolid())){
+
+						map.addTile(g.getCol(),g.getRow(), g);
+						placedThisRound.add(g);
+						
+					}
+
+					if (colIndex==c){
+						colIndex +=3;
+					}
+
+
+				}
+			}
 
 		}
 	}	
