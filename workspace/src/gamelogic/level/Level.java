@@ -141,6 +141,8 @@ public class Level {
 	public void onPlayerDeath() {
 		active = false;
 		playerDead = true;
+		waters.clear();
+		gasses.clear();
 		throwPlayerDieEvent();
 	}
 
@@ -186,7 +188,7 @@ public class Level {
 				}
 			}
 			player.jumpPower = 1450;
-			player.walkSpeed = 400;;
+			player.walkSpeed = 400;
 
 			//pre condition: waters array is not empty
 			//post condition: players jumppower is less
@@ -265,6 +267,7 @@ public class Level {
 
 	private void addGas(int col, int row, Map map, int numSquaresToFill, ArrayList<Gas> placedThisRound) {
 		Gas g = new Gas (col, row, tileSize, tileset.getImage("GasOne"),this, 0);
+		gasses.add(g);
 		map.addTile(col, row, g);
 		placedThisRound.add(g);
 		numSquaresToFill--;
@@ -282,6 +285,7 @@ public class Level {
 					if (g.getRow()-1>0 && g.getRow()+1>0 && g.getCol()+1>0 && g.getCol()-1>0 &&  !(map.getTiles()[g.getCol()][g.getRow()] instanceof Gas) && !(map.getTiles()[g.getCol()][g.getRow()].isSolid())){
 
 						map.addTile(g.getCol(),g.getRow(), g);
+						gasses.add(g);
 						placedThisRound.add(g);
 						numSquaresToFill--;
 					}
