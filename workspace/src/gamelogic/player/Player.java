@@ -34,7 +34,7 @@ public class Player extends PhysicsObject{
 		if(PlayerInput.isRightKeyDown()) {
 			movementVector.x = +walkSpeed;
 		}
-		if(PlayerInput.isJumpKeyDown() && !isJumping) {
+		if((PlayerInput.isJumpKeyDown() && !isJumping) || Level.inBubble == true) {
 			movementVector.y = -jumpPower;
 			isJumping = true;
 		}

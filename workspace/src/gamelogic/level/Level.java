@@ -20,6 +20,7 @@ import gamelogic.tiles.SolidTile;
 import gamelogic.tiles.Spikes;
 import gamelogic.tiles.Tile;
 import gamelogic.tiles.Water;
+import gamelogic.tiles.Bubble;
 
 public class Level {
 
@@ -37,6 +38,7 @@ public class Level {
 	private ArrayList<Flower> flowers = new ArrayList<>();
 	private ArrayList<Water> waters = new ArrayList<>();
 	private ArrayList<Gas> gasses = new ArrayList<>();
+	private ArrayList<Bubble> bubbles = new ArrayList<>();
 
 	private List<PlayerDieListener> dieListeners = new ArrayList<>();
 	private List<PlayerWinListener> winListeners = new ArrayList<>();
@@ -47,6 +49,8 @@ public class Level {
 	private int tileSize;
 	private Tileset tileset;
 	public static float GRAVITY = 70;
+	public static boolean inBubble = false;
+
 
 	public Level(LevelData leveldata) {
 		this.leveldata = leveldata;
@@ -120,6 +124,12 @@ public class Level {
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Half_water"), this, 2);
 				else if (values[x][y] == 21)
 					tiles[x][y] = new Water(xPosition, yPosition, tileSize, tileset.getImage("Quarter_water"), this, 1);
+				else if (values[x][y] == 22){
+					tiles[x][y] = new Bubble(xPosition, yPosition, tileSize, tileset.getImage("Bubble"), this);
+					//System.out.println("tiles[" + x + "][" + y + "] is not a Bubble! It's a " + tiles[x][y].getClass());
+					bubbles.add((Bubble) tiles[x][y]);
+				}
+					
 			}
 
 		}
@@ -198,6 +208,12 @@ public class Level {
 					player.jumpPower = 1050;
 				}
 			}
+			inBubble = false;
+			for (Bubble w: bubbles){
+				if(w.getHitbox().isIntersecting(player.getHitbox())){
+					inBubble = true;
+				}
+			}
 			
 			//pre condition: gasses array is not empty
 			//post condition: players walkspeed is less
@@ -221,6 +237,9 @@ public class Level {
 	//#############################################################################################################
 	//Your code goes here! 
 	//Please make sure you read the rubric/directions carefully and implement the solution recursively!
+
+
+
 	private void water(int col, int row, Map map, int fullness) {
 		//make water (You’ll need modify this to make different kinds of water such as half water and quarter water)
 		Water w;
