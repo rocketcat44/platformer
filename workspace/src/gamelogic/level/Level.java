@@ -197,7 +197,7 @@ public class Level {
 					onPlayerDeath();
 				}
 			}
-			player.jumpPower = 1450;
+			player.jumpPower = 1650;
 			player.walkSpeed = 400;
 
 			//pre condition: waters array is not empty
